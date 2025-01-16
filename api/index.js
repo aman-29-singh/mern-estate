@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';//we have to import this to use process.env.MONGO
 import userRouter from './routes/user.route.js';//yahan par route.js insert karna hai
+import authRouter from './routes/auth.route.js';
 dotenv.config();
 
 //to use .env file we have to install npm install .env in ter minal of mern-estate
@@ -13,6 +14,13 @@ mongoose.connect(process.env.MONGO).then(() => {
     })
 
 const app = express();
+
+//by default we are not allowed to send any json to the server so we need to allow json as the input
+app.use(express.json());//this will allow json as input of the server
+/*so isse jab insomania api testing se jab json mein data send karenge server mein toh woh data server par dikhega
+but actually this is not what we want to do we wanna save this data inside a database so inside auth.controller.js
+we willuse destructuring i.e const {username,email,password} = req.body then will store this information inside
+database using model that we had already created  so this coding will done in inside auth.controller.js file*/
 
 app.listen(3000, () => {
     console.log('server is running on port 3000!')
@@ -33,3 +41,5 @@ this routes folder we gonna create our first route just for users i.e file user.
 
 app.use("/api/user",userRouter); //we use this test api from user.route.js file of routes folder
 //to get response from server we have to write in browser localhost:3000/api/user/test
+
+app.use('/api/auth',authRouter);
