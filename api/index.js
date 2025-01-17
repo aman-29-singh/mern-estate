@@ -43,3 +43,13 @@ app.use("/api/user",userRouter); //we use this test api from user.route.js file 
 //to get response from server we have to write in browser localhost:3000/api/user/test
 
 app.use('/api/auth',authRouter);
+
+app.use((err,req, res, next)=> { //this is a Middleware to handle Error
+   const statusCode = err.statusCode || 500;
+   const message = err.message || 'Internal Server Error';
+   return res.status(statusCode).json({
+    success:false,
+    statusCode,
+    message,
+   })
+})
