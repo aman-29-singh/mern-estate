@@ -1,5 +1,5 @@
 import express from 'express';
-import { signup } from '../controllers/auth.controller.js';
+import { signin,signup } from '../controllers/auth.controller.js';
 
 const authRouter = express.Router();
 
@@ -10,5 +10,6 @@ authRouter.post('/signup')
 //and this signup() function we gonna create inside controllers fiolder i.e inside auth.controller.js file
 
 authRouter.post("/signup",signup)//here /signup is url and 2nd parameter signup is function of auth.controller.js
+authRouter.post("/signin",signin);
 
 export default authRouter;//this authRouter will import in main index.js

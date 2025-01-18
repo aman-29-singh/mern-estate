@@ -2,7 +2,7 @@ import User from '../models/user.model.js';
 import bcryptjs from 'bcryptjs';//for importing this first in root terminal we have to install bcryptjs
 import { errorHandler } from '../utils/error.js';//import this to throw or handle the error in catch{}
 //i.e npm install bcryptjs ye password ko hashed kar dega jise password secure hoga
-
+import jwt from 'jsonwebtoken';
 
 export const signup = async (req,res,next)=>{ //we pass next as parameter to middleware ko chalane k liye
     //we want information from browser information like username,email,password
@@ -36,14 +36,43 @@ export const signup = async (req,res,next)=>{ //we pass next as parameter to mid
     }
 
 
-     /* try {
-        const hashedPassword = bcrypt.hashSync(password, saltRounds);  // Hash password with salt rounds
-        // Continue with the rest of your signup logic (e.g., save to database)
-        return res.status(201).json({ message: 'User created successfully!' });
-      } catch (error) {
-        console.error('Error hashing password:', error);
-        return res.status(500).json({ message: 'Internal server error' });
-      }*/
+}
 
+
+export const signin = async(req,res,next) => {//signin willtake req,res,next as parameter
+  const { email, password } = req.body;//this will take request from user i.e frontend & store in email & pass
+  try{
+    /*what we gonna do with this email and password that 1st we gonna check that this email is exist in 
+    database or not with the help of validUser*/
+    const validUser = await User.findOne({email});//User model k help se mongodb mein find karenge ye email ko
+    if (!validUser) return next(errorHandler(404,'User not found'));//if email not exist in mongodb then this error
+
+    const validPassword = bcryptjs.compareSync(password,validUser.password);
+    /*i.e with the help of bcryptjs we will comapre the password jo req.body se aaraha hai with the password
+    of validUser jiska password pehle se mongodb database mein store hai */
+
+    if(!validPassword) return next(errorHandler(401,'Wrong credentials!')); //next() is middleware
+
+    /*so if we assure that both email and password are correct then we need to authenticate the user
+    now the way we do the authentication is to add the cookies inside the browser and we need to 
+    create a hashtoken that includes the email of the user or the Id of the User and then we save this
+    token inside the browser cookie So each time when the User wanna do some changes like its email password
+    and any crucial information so we need to check the User is auntenticated or not so we can use that
+    cookie to do that But we not gonna save the data as it is we gonna hashed the data as well
+    So the best package for doing that is jwt i.e (json web token) we can use this package to create
+    the token with these we can create the hash values of the Users So in terminal in root directory
+    i.e mern-estate is root directory iske andar we install jsonwebtoken i.e npm i jsonwebtoken
+    and at top of this file we will import jwt from 'jsonwebtoken';   */
+    const token = jwt.sign({ id: validUser._id},process.env.JWT_SECRET)//creation of token
+    const { password: pass, ...rest } = validUser._doc;//password na dikhe in insomania iske liye
     
+    //now after creation of token we want to save this token as a cookie
+    res.cookie('access_token',token,{ httpOnly:true }).status(200).json(rest);
+    //cookie ka naam hai access_token yeh api testing insomania mein bhi dikh jayega
+
+
+
+  }catch (error){
+    next(error);//it is middleware to catch error this miidleware we had created in index.js file i.e 500code
+  }
 }
