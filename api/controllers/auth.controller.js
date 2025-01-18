@@ -35,5 +35,15 @@ export const signup = async (req,res,next)=>{ //we pass next as parameter to mid
 
     }
 
+
+     /* try {
+        const hashedPassword = bcrypt.hashSync(password, saltRounds);  // Hash password with salt rounds
+        // Continue with the rest of your signup logic (e.g., save to database)
+        return res.status(201).json({ message: 'User created successfully!' });
+      } catch (error) {
+        console.error('Error hashing password:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+      }*/
+
     
 }
