@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';//we have to install redux toolkit in terminal/client  to import this
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; 
+
+
 export default function SignIn() {
   //we want to create a piece of state which keep track of all changes so we use4 useState formData
   const [formData, setFormData] = useState({});//formData is object and we change this object using setformData
 
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);  // Add loading state
+  //const [error, setError] = useState(null);
+  //const [loading, setLoading] = useState(false);  // Add loading state
+  const { loading,error } = useSelector((state) => state.user);//for redux this make it global
+  //state.user means in userSlice file in userSlice() function the name is 'user'
+  
   const navigate = useNavigate();//this is for navigation
-
+  const dispatch = useDispatch();//for Redux
   const handleChange = (e) => {
     setFormData( //it is a function 
       {
@@ -21,7 +28,8 @@ export default function SignIn() {
     e.preventDefault()//it prevents Refreshing the page whwn we submit the form
     try{
 
-      setLoading(true);//before request to server loading dikhega
+    //  setLoading(true);//before request to server loading dikhega
+    dispatch(signInStart()); //for Redux
     const res = await fetch('/api/auth/signin',
       {
         method: 'POST',
@@ -36,21 +44,27 @@ export default function SignIn() {
      if(data.success === false){ //after request to server
       
       
-       setLoading(false);
-       setError(data.message);
+      // setLoading(false);
+      // setError(data.message);
+
+      dispatch(signInFailure(data.message)); //for redux
        return;
      }
 
      
 
-      setLoading(false);
-      setError(null);
+    //  setLoading(false);
+    //  setError(null);
+
+    dispatch(signInSuccess(data));
       navigate('/');//when user created then it navigate to sign-in page
       
 
     }catch(error) {
-      setLoading(false);
-      setError(error.message);
+    //  setLoading(false);
+    //  setError(error.message);
+
+    dispatch(signInFailure(error.message));
     }
     
     
