@@ -3,7 +3,11 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';//we have to import this to use process.env.MONGO
 import userRouter from './routes/user.route.js';//yahan par route.js insert karna hai
 import authRouter from './routes/auth.route.js';
+import cookieParser from 'cookie-parser';//install in client terminal/ npm i cookie-parser
 dotenv.config();
+
+
+
 
 //to use .env file we have to install npm install .env in ter minal of mern-estate
 mongoose.connect(process.env.MONGO).then(() => {
@@ -21,6 +25,8 @@ app.use(express.json());//this will allow json as input of the server
 but actually this is not what we want to do we wanna save this data inside a database so inside auth.controller.js
 we willuse destructuring i.e const {username,email,password} = req.body then will store this information inside
 database using model that we had already created  so this coding will done in inside auth.controller.js file*/
+
+app.use(cookieParser());//initialise this now you can get the information from cookie
 
 app.listen(3000, () => {
     console.log('server is running on port 3000!')
