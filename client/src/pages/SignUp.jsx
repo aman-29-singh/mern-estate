@@ -1,5 +1,10 @@
+//yahan par import React from 'react' nhi aayega because it is already declare
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '../components/OAuth';
+
+
+
 export default function SignUp() {
   //we want to create a piece of state which keep track of all changes so we use4 useState formData
   const [formData, setFormData] = useState({});//formData is object and we change this object using setformData
@@ -72,6 +77,7 @@ export default function SignUp() {
          disabled:opacity-80' onChange={handleChange}>
           { loading ? 'Loading...' : 'Sign Up'}
           </button> {/*agar btn par click hoga toh btn par dikhega Loading otherwise btn par Sign Up dikhega*/}
+          <OAuth></OAuth>
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Have an account?</p>
