@@ -1,7 +1,9 @@
 import {FaSearch} from 'react-icons/fa' //install from terminal react  Faicons
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';//we import this
 
 export default function Header() {
+    const { currentUser } = useSelector(state => state.user)//we intialise this
     return (
         <header className='bg-slate-200 shadow-md '>
             <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -28,9 +30,15 @@ export default function Header() {
                     <Link to='about'>
                     <li className='hidden sm:inline text-slate-700 hover:underline'>About</li>
                     </Link>
+                    
+                    <Link to='/profile'>{/*isse image par click karne se /profile page par jayenge */}
+                    {currentUser ? (
+                        <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar}
+                         alt='profile'/>
+                    ): (
+                        <li className='hidden sm:inline text-slate-700 hover:underline'>Sign In</li>
+                    )}
 
-                    <Link to='/sign-in'>
-                    <li className='hidden sm:inline text-slate-700 hover:underline'>Sign In</li>
                     </Link>
                 </ul>
             </div>
