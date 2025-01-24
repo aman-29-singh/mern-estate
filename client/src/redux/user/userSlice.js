@@ -11,7 +11,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        signInStart: (state) => {
+        signInStart: (state) => {//this is also the real action perform when we interact with signIn interface of user
             state.loading = true;
         },
         signInSuccess: (state,action) => {
@@ -22,7 +22,20 @@ const userSlice = createSlice({
         signInFailure: (state , action) => {
             state.error = action.payload;
             state.loading = false;
-        }
+        },
+        updateUserStart: (state) => { //this is the real action that will perform when we click submit button
+            state.loading = true;
+        },
+        updateUserSuccess: (state, action) => {//this will import in profile.jsx file for updating user profile
+            state.currentUser = action.payload;
+            state.loading = false;
+            state.error = null;
+
+        },
+        updateUserFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
     }
 });
 
@@ -33,6 +46,8 @@ and state is also change from start to end  */
 /*Now we import this userSlice() function  in store.js file i.e in store.js file inside the reducer:{}
 we gonna import this  i.e reducer: {user: userReducer}*/
 
-export const { signInStart, signInSuccess, signInFailure } = userSlice.actions;
+export const { signInStart, signInSuccess, signInFailure,
+updateUserFailure, updateUserSuccess, updateUserStart} = userSlice.actions;
+ 
 
 export default userSlice.reducer;
