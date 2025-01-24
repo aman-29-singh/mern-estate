@@ -10,10 +10,10 @@ export const verifyToken = (req, res, next) => {
     //here next is middleware and errorHandler is function in error.js file of utils folder
 
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return next(errorHandler(403,'Forbidden'));
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {//process .env k andar database ka naam aur user ka naam verify hoga
+        if (err) return next(errorHandler(403,'Forbidden'));//agar naam match nahi hoga then we get err i.e error
 
-       req.user = user;
+       req.user = user; //this will give user id
        next(); 
     })
 }
