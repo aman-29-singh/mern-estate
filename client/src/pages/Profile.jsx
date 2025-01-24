@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useRef, useState } from 'react'
-import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess } from "../redux/user/userSlice"//we import this
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserStart } from "../redux/user/userSlice"//we import this
 import { useDispatch } from "react-redux"; //import this
 
 export default function Profile() {
@@ -63,6 +63,25 @@ export default function Profile() {
       dispatch(deleteUserFailure(error.message))
     }
   }
+
+  const handleSignOut = async() => {
+
+    try{
+      dispatch(signOutUserStart());
+      const res = await fetch('/api/auth/signout');//here we goona request to /signout of backend i.e this may be frontend-backend connection
+      //and we not gonna send anything to backend so POST method is not required so by default we have get Method
+
+      const data = await res.json();//here we gonna convert the response to json
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));//this will delete the User i.e signOut the user
+        return;
+      }
+       dispatch(deleteUserSuccess(data));
+    } catch (error){
+      dispatch(deleteUserFailure(data.message));
+
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">{/*maximum width in laptop screen is large lg mx-auto se center hoga */}
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -87,7 +106,7 @@ export default function Profile() {
       </form>
       <div className="flex justify-between mt-5">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete account</span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handleSignOut} className="text-red-700 cursor-pointer">Sign out</span>
       </div>
       
       <p className="text-red-700 mt-5">{error ? error : ''}</p>

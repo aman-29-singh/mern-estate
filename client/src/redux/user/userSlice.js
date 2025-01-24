@@ -37,7 +37,7 @@ const userSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        deleteUserStart: (state) => {
+        deleteUserStart: (state) => {//this is a Reducers for deleteUser
             state.loading = true;
         },
         deleteUserSuccess: (state) => {
@@ -46,6 +46,18 @@ const userSlice = createSlice({
             state.error = null;
         },
         deleteUserFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
+        signOutUserStart: (state) => { //this is Reducers for signOut user
+            state.loading = true;
+        },
+        signOutUserSuccess: (state) => {
+            state.currentUser = null;
+            state.loading = false;
+            state.error = null;
+        },
+        signOutUserFailure: (state, action) => {
             state.error = action.payload;
             state.loading = false;
         }
@@ -61,7 +73,7 @@ we gonna import this  i.e reducer: {user: userReducer}*/
 
 export const { signInStart, signInSuccess, signInFailure,
 updateUserFailure, updateUserSuccess, updateUserStart, deleteUserStart, deleteUserSuccess,
-deleteUserFailure} = userSlice.actions;
- 
+deleteUserFailure, signOutUserStart, signOutUserSuccess,signOutUserFailure} = userSlice.actions;
+ //ye sab Reducers hai export hokar dispatch honge in event function k andar i.e in profile.jsx mein
 
 export default userSlice.reducer;
