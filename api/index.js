@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';//we have to import this to use process.env.MONGO
 import userRouter from './routes/user.route.js';//yahan par route.js insert karna hai
 import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';//install in client terminal/ npm i cookie-parser
 dotenv.config();
 
@@ -49,6 +50,8 @@ app.use("/api/user",userRouter); //we use this test api from user.route.js file 
 //to get response from server we have to write in browser localhost:3000/api/user/test
 
 app.use('/api/auth',authRouter);
+app.use('/api/listing',listingRouter);//so we need to create this route in our application
+
 
 app.use((err,req, res, next)=> { //this is a Middleware to handle Error
    const statusCode = err.statusCode || 500;
