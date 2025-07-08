@@ -96,7 +96,7 @@ export default function Profile() {
         className="border p-3 rounded-lg" onChange={handleChange} />
         <input type="email" placeholder="email" id='email' defaultValue={currentUser.email}
          className="border p-3 rounded-lg" onChange={handleChange} />
-        <input type="text" placeholder="password" id='password'
+        <input type="password" placeholder="password" id='password'
          className="border p-3 rounded-lg" onChange={handleChange} />
 
         <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95
