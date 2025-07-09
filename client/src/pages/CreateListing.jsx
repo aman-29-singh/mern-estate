@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-
+import { userRef } from 'react';
+import {useSelector} from 'react-redux'//import this it helps to know which is current user
 export default function CreateListing() {
+
+  const {currentUser} = useSelector(state => state.user)//define useSelector
   const [files, setFiles] = useState([]); // To store selected files
   const [formData, setFormData] = useState({
     uploadedImageUrls: [],
@@ -21,7 +24,7 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [imageUploading, setImageUploading] = useState(false);
-
+  
   console.log(formData);
 
   // Function to handle file upload to Cloudinary
@@ -179,11 +182,15 @@ export default function CreateListing() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          userRef: currentUser._id,//it is important it helps to known which is current user
+        }),
       });
 
-      console.log('Response status:', res.status);
-      console.log('Response headers:', res.headers);
+      //console.log('Response status:', res.status);
+      //console.log('Response headers:', res.headers);
+
 
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);

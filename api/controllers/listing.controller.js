@@ -7,7 +7,7 @@ export const createListing = async(req, res, next) => {
         const listing = await Listing.create(req.body)//req.body is information we get from browser
         return res.status(201).json(listing);//this listing is created in json form with response 201 means something created
     } catch (error){
-
+        next(error);
     }
 
 }
