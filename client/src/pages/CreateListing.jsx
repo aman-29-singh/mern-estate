@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { userRef } from 'react';
 import {useSelector} from 'react-redux'//import this it helps to know which is current user
+import {useNavigate} from 'react-router-dom'
 export default function CreateListing() {
 
   const {currentUser} = useSelector(state => state.user)//define useSelector
   const [files, setFiles] = useState([]); // To store selected files
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    uploadedImageUrls: [],
+    //uploadedImageUrls: [],
+    //uploadedImages:[],
+    imageUrls:[],
     name: '',
     description: '',
     address: '',
@@ -25,11 +29,13 @@ export default function CreateListing() {
   const [uploadedImages, setUploadedImages] = useState([]);
   const [imageUploading, setImageUploading] = useState(false);
   
+  
   console.log(formData);
 
   // Function to handle file upload to Cloudinary
   const handleFileUpload = async (files) => {
-    const uploadedImageUrls = [];
+    //const uploadedImageUrls = [];
+    const imageUrls = [];
     
     for (const file of files) {
       const data = new FormData();
@@ -51,10 +57,10 @@ export default function CreateListing() {
         console.log('Full Cloudinary response:', uploadImageURL);
         
         if (uploadImageURL.secure_url) {
-          uploadedImageUrls.push(uploadImageURL.secure_url);
+          imageUrls.push(uploadImageURL.secure_url);//
           console.log('Uploaded image URL:', uploadImageURL.secure_url);
         } else if (uploadImageURL.url) {
-          uploadedImageUrls.push(uploadImageURL.url);
+          imageUrls.push(uploadImageURL.url);//
           console.log('Uploaded image URL:', uploadImageURL.url);
         } else {
           console.error('Upload failed - no URL in response:', uploadImageURL);
@@ -67,7 +73,7 @@ export default function CreateListing() {
       }
     }
 
-    return uploadedImageUrls;
+    return imageUrls;//
   };
 
   // Function to handle image upload (separate from listing creation)
@@ -87,18 +93,18 @@ export default function CreateListing() {
 
     try {
       console.log('Starting upload for files:', files);
-      const uploadedImageUrls = await handleFileUpload(files);
-      console.log('Upload completed, URLs received:', uploadedImageUrls);
+      const imageUrls = await handleFileUpload(files);//
+      console.log('Upload completed, URLs received:', imageUrls);//
       
-      if (uploadedImageUrls.length > 0) {
+      if (imageUrls.length > 0) {//
         // Combine with existing uploaded images
-        const allUploadedImages = [...uploadedImages, ...uploadedImageUrls];
+        const allUploadedImages = [...uploadedImages, ...imageUrls];//
         setUploadedImages(allUploadedImages);
         
         // Update formData with uploaded image URLs
         setFormData(prev => ({
           ...prev,
-          uploadedImageUrls: allUploadedImages
+          imageUrls: allUploadedImages//
         }));
         
         console.log('Updated uploadedImages state:', allUploadedImages);
@@ -121,7 +127,7 @@ export default function CreateListing() {
     setUploadedImages(updatedImages);
     setFormData({
       ...formData,
-      uploadedImageUrls: updatedImages
+      imageUrls: updatedImages//
     });
   };
 
@@ -155,7 +161,7 @@ export default function CreateListing() {
     console.log('Current formData:', formData);
     
     // Validation
-    if (formData.uploadedImageUrls.length === 0) {
+    if (formData.imageUrls.length === 0) {//
       setError('Please upload at least one image');
       return;
     }
@@ -170,6 +176,9 @@ export default function CreateListing() {
       setError('Please fill in all required fields');
       return;
     }
+
+    if(+formData.regularPrice < +formData.discountPrice) return setError('Discount price must be lower than regular price')
+
 
     try {
       setLoading(true);
@@ -204,6 +213,8 @@ export default function CreateListing() {
         setLoading(false);
         return;
       }
+
+      navigate(`/listing/${data._id}`)
       
       // Success handling
       alert('Listing created successfully!');
@@ -211,7 +222,8 @@ export default function CreateListing() {
       
       // Optional: Reset form
       setFormData({
-        uploadedImageUrls: [],
+        //uploadedImageUrls: [],
+        imageUrls: [],
         name: '',
         description: '',
         address: '',
@@ -426,14 +438,14 @@ export default function CreateListing() {
             </button>
           </div>
 
-          {uploadedImages.length > 0 && (
+          {formData.imageUrls.length > 0 && (//  uploadedImages
             <div className="mt-4">
               <p className='text-green-700 text-sm mb-2'>
-                {uploadedImages.length} image(s) uploaded successfully!
+                {formData.imageUrls.length} image(s) uploaded successfully!
               </p>
               <div className="flex gap-4 flex-wrap">
-                {uploadedImages.map((url, index) => (
-                  <div key={index} className="relative">
+                {formData.imageUrls.map((url, index) => ( //
+                  <div key={url} className="relative">
                     <img 
                       src={url} 
                       alt={`Listing ${index + 1}`} 
@@ -455,7 +467,7 @@ export default function CreateListing() {
                 ))}
               </div>
               <div className="mt-2 text-xs text-gray-500">
-                Debug: {uploadedImages.length} URLs in state
+                Debug: {formData.imageUrls.length} URLs in state
               </div>
             </div>
           )}
