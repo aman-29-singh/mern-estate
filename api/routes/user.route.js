@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteUser, test, updateUser } from '../controllers/user.controller.js'//import this and add .js after controller
+import { deleteUser, test, updateUser,getUserListings } from '../controllers/user.controller.js'//import this and add .js after controller
 import { verifyToken } from '../utils/verifyUser.js';
 
 const userRouter = express.Router();
@@ -27,5 +27,11 @@ update the User i.e before updateUser() function we gonna check User is verified
 verifytoken() function so inside the utils folder we already have an error.js file so we gonna create another
 file called verifyUser.js  */
 userRouter.delete('/delete/:id', verifyToken, deleteUser);//here id is params
+
+userRouter.get('/listings/:id',verifyToken,getUserListings)//jab create listing create hoga toh isse uss particular id ka data page par jayenge
+//here verify Token isliye hai because we only want verify people who are auntheticated to be able to get listing of a specific person id
+
+
+
 
 export default userRouter;

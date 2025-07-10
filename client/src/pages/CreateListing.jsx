@@ -214,7 +214,7 @@ export default function CreateListing() {
         return;
       }
 
-      navigate(`/listing/${data._id}`)
+      navigate(`/listing/${data._id}`)//it will navigate the user to its id page
       
       // Success handling
       alert('Listing created successfully!');

@@ -1,6 +1,7 @@
 import { errorHandler } from "../utils/error.js";//here we must ensure the extension .js i.e error.js
 import bcryptjs from 'bcryptjs';
 import User from "../models/user.model.js";//in models we have to add .js in last
+import Listing from "../models/listing.model.js";
 
 
 export const test = (req, res) => {
@@ -46,3 +47,23 @@ export const deleteUser = async(req, res, next) => {
     }
 }
 
+
+export const getUserListings = async (req, res, next) => {
+    /*so first of all we are going to check that if someone is authenticated it must get only his own listing 
+    they cannot get listing of other people i.e we check that person is real owner of that perticular id listing */
+    if(req.user.id === req.params.id){
+        /*here req.user.id this we get from cookie i.e from jwt is equal to browser k params mein jo :id hoga
+        i.e/listings/:id ismein ka id equal hoga cookie k id  se jo humein authentication k time par jwt se mila
+        tha then it is valid persons id then we wanna return the data otherwise we wanna send an error using -> next */
+        try{
+            const listings = await Listing.find({ userRef: req.params.id})//Listing we import from listing.model.js
+            //it will find just the listing that have userRef of /listings/:id of this id
+            res.status(200).json(listings);//we will return this listings in json
+        } catch (error) {
+            next(error)
+        }
+    }else{
+        return next (errorHandler(401, 'You can only view your own listings! '))
+    }
+
+}
