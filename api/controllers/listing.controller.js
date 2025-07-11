@@ -37,3 +37,30 @@ export const deleteListing = async (req, res, next) => {
         next(error);
     }
 }
+
+//this is for  edit the individual listing
+export const updateListing = async (req, res, next)=> {
+    //first we will check if listing is exist or not\
+    const listing = await Listing.findById(req.params.id);
+    if(!listing) {
+        return next(errorHandler(404, 'Listiing not found'));
+    }
+
+    //now  we will  check that wheather the listing is belong to that person in req.params.id
+    if(req.user.id !== listing.userRef) {
+        return next(errorHandler(401, 'you can only update your own listings!'));
+    }
+
+    //otherwise we will update the person listing
+    try{
+        const updatedListing = await Listing.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        res.status(200).json(updatedListing);
+
+    } catch(error) {
+        next(error);
+    }
+}
