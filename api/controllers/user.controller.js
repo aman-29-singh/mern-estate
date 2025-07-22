@@ -67,3 +67,24 @@ export const getUserListings = async (req, res, next) => {
     }
 
 }
+
+
+
+//we gonna create an api route for getting an user
+export const getUser = async (req, res, next) => {
+    try{
+         //we just wanna search for the user based on a parameter that we provide for an api endpoint
+    const user = await User.findById(req.params.id);
+    
+    //if the user is not existed then we wanna return an error using our errorHandler
+    if(!user) return next(errorHandler(404, 'User not found!'));
+
+    //otherWise we wanna  bring back the user but we don't wanna bring back the password so we gonna separate the password
+    const { password: pass, ...rest } = user._doc;
+
+    res.status(200).json(rest);
+    } catch (error){
+        next(error);
+    }
+    
+};

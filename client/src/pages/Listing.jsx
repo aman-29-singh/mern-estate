@@ -7,6 +7,7 @@ import SwiperCore from 'Swiper';
 import { useSelector } from 'react-redux';
 import { Navigation } from 'swiper/modules'//because we wanna add navigation between different images
 import 'swiper/css/bundle';
+import Contact from '../components/Contact';//import for contactt button
 import {
   FaBath,
   FaBed,
@@ -26,7 +27,9 @@ export default function Listing() {
     const [contact, setContact] = useState(false);// added
 
      const { currentUser } = useSelector((state) => state.user);//for current user from store reducer
-    useEffect(() => {
+
+     console.log(currentUser._id, listing?.userRef);
+     useEffect(() => {
         const fetchListing = async () => {
             try {
                 const res = await fetch(`/api/listing/get/${params.listingId}`)//as we define in app.jsx i.e/listing/:listingId
@@ -51,19 +54,34 @@ export default function Listing() {
 
         fetchListing();
     }, [params.listingId])
-    return <main>
-         {loading && <p className='text-center my-7 text-2xl'>loading...</p> }
-    {error && <p className='text-center my-7 text-2xl'>Something went wrong</p> } {/*if there is an error we want to see error as well */}
 
-    {/*Now i wanna show image at the top using Swiper library  which we install on client side */}
-    {listing && !loading && !error && 
-    <div>
-        <Swiper>
-            {listing.imageUrls.map((url) => <SwiperSlide key={url}>
-                <div className='h-[550px]' style={{background: `url(${url}) center no-repeat`}}></div>
-            </SwiperSlide>)}
-        </Swiper>
-        <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
+   // console.log('Listing owner:', listing.userRef);
+    //console.log('Current user ID:', currentUser._id);
+    //console.log('Current user:', currentUser);
+
+    return( 
+
+     <main>
+      {loading && <p className='text-center my-7 text-2xl'>Loading...</p>}
+      {error && (
+        <p className='text-center my-7 text-2xl'>Something went wrong!</p>
+      )}
+      {listing && !loading && !error && (
+        <div>
+          <Swiper navigation>
+            {listing.imageUrls.map((url) => (
+              <SwiperSlide key={url}>
+                <div
+                  className='h-[550px]'
+                  style={{
+                    background: `url(${url}) center no-repeat`,
+                    backgroundSize: 'cover',
+                  }}
+                ></div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
             <FaShare
               className='text-slate-500'
               onClick={() => {
@@ -101,7 +119,8 @@ export default function Listing() {
                   ${+listing.regularPrice - +listing.discountPrice} OFF
                 </p>
               )}
-              <p className='text-slate-800'>
+            </div>
+            <p className='text-slate-800'>
               <span className='font-semibold text-black'>Description - </span>
               {listing.description}
             </p>
@@ -134,12 +153,11 @@ export default function Listing() {
               >
                 Contact landlord
               </button>
-            )}
+            )} {/*this Contact landlord button will seen only when we sign In to app with another email */}
             {contact && <Contact listing={listing} />}
           </div>
-          </div>
-    </div>
-        }
+        </div>
+      )}
     </main>
-
+)
 }

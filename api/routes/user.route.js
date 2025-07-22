@@ -1,7 +1,7 @@
 import express from 'express';
 import { deleteUser, test, updateUser,getUserListings } from '../controllers/user.controller.js'//import this and add .js after controller
 import { verifyToken } from '../utils/verifyUser.js';
-
+import { getUser } from '../controllers/user.controller.js';
 const userRouter = express.Router();
 
 /*
@@ -31,7 +31,7 @@ userRouter.delete('/delete/:id', verifyToken, deleteUser);//here id is params
 userRouter.get('/listings/:id',verifyToken,getUserListings)//jab create listing create hoga toh isse uss particular id ka data page par jayenge
 //here verify Token isliye hai because we only want verify people who are auntheticated to be able to get listing of a specific person id
 
-
+userRouter.get('/:id', verifyToken, getUser)
 
 
 export default userRouter;
