@@ -77,3 +77,67 @@ export const getListing = async (req, res, next) => {
         next(error)//it is middleware to catch the error
     }
 }
+
+export const getListings = async (req, res, next ) => {
+    //first we write in try catch because of possible errors
+    try{
+        /*we wanna create the request but we wanna search inside the listing but before wanna limit the page
+        because we wanna need a pagination we wanna add the limit we wanna have an start index because we wanna 
+        known which page we are in and also we wanna get the offer, parking, type etc when we click on offer
+        than w only get an listing of page that had an offer and in url also offer is true when we click on
+        offer in page so we should have an ability to do all this thing by just one api route  so we wanna
+        create only one api route to be able to do all this thing */
+        const limit = parseInt(req.query.limit) || 9;//like /api/listing/get?limit=2 so this is ging to req.quer.limit
+        //so we wanna say it if there is limit use it parse it and make it number otherwise use 9 means 9 listing page dikhegi
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        let offer = req.query.offer;
+
+        if (offer === undefined || offer === 'false') {
+            offer = { $in: [false, true] };
+        }
+
+        let furnished = req.query.furnished;
+
+        if(furnished === undefined || furnished === 'false') {
+            furnished ={ $in: [false, true] };
+        }
+
+         /*ye code se form mein agar parking,furnished etc ye sab mein se kisi par bhi tick karenge toh 
+         browser k URL mein ye furnished , parking etc ye sab true ho jayega  */
+        let parking = req.query.parking;
+
+        if( parking === undefined || parking === 'false') {
+            parking ={ $in: [false, true] };
+        }
+
+
+        let type = req.query.type;
+
+        if( type === undefined || type === 'false') {
+            type ={ $in: ['sale', 'rent'] };
+        }
+
+        const searchTerm = req.query.searchTerm || '';
+
+        const sort = req.query.sort || 'createdAt';
+
+        const order = req.query.order || 'desc';
+
+        const listings = await Listing.find({
+            //regx is built in search functtionality for mongodb suppose name is modern and if we search de than it search modern as well 
+            name: { $regex : searchTerm, $options: 'i'},//here options means don't care about upperCase and lowerCase in search
+            offer,
+            furnished,
+            parking,
+            type,// search for all this
+        }).sort(
+            {[sort]: order}
+        ).limit(limit).skip(startIndex)//if starting index is 0 they are gonna start from begining but if startingIndex is 1 than it skips the first of 9 for us
+
+
+        return res.status(200).json(listings);
+
+    } catch(error){
+        next(error);
+    }
+}
