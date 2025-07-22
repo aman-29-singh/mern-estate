@@ -9,6 +9,7 @@ import PrivateRoute from './components/PrivateRoute';
 import CreateListing from './pages/CreateListing';
 import UpdateListing from './pages/UpdateListing';
 import Listing from './pages/Listing';
+import Search from './pages/Search';
 export default function App() {
   return (
     <BrowserRouter>  {/*for this tag we have to install react-router-dom from terminal*/}
@@ -18,6 +19,7 @@ export default function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/about' element={<About />} />
+        <Route path='/search' element={<Search />} />
         <Route path='/listing/:listingId' element={<Listing />}/>{/*this page is not private i.e this page shows for individual specific listing Id */}
 
         <Route element={<PrivateRoute />} >
