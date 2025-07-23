@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 /*This paage has two part the search side information form and also the Listing Result side and in mobile
 display we see tis two both part on top of each other wher in laptop screen we see both of them next to each other */
 import { useNavigate } from 'react-router-dom'
+import ListingItem from '../components/ListingItem';
 export default function Search() {
     const navigate = useNavigate();
     const [sidebardata, setSidebardata] = useState(
@@ -216,8 +217,26 @@ export default function Search() {
                 </form>
             </div>
 
-            <div className=''>{/*this is Right side of a page where we have a listing Results*/}
+            <div className='flex-1'>{/*this is Right side of a page where we have a listing Results*/}
                 <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results:</h1>
+                <div className='p-7 flex flex-col gap-4'>
+                    {!loading && listings.length === 0 && (
+                        <p className='text-xl text-slate-700'>No listing found</p>
+                    )}
+                    {loading && (
+                        <p className='text-xl text-slate-700 text-center w-full'>Loading...</p>
+                    )}
+
+                    {
+                        //import this <ListingItem />  from components on top and render it when there is no loading
+                        !loading && listings && listings.map((listing)=> <ListingItem key={listing._id} listing={listing}/> )
+                        //Now pass this listing={listing} as a value inside a <ListingItem /> component
+                            
+                            
+
+                        
+                    }
+                </div>
             </div>
         </div>
     )
