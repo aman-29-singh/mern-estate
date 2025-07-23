@@ -20,7 +20,8 @@ export default function Search() {
 
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
-    console.log(listings);
+    const [ showMore, setShowMore ] = useState(false);//for adding showMore button at last
+    //console.log(listings);
 
     useEffect(() => {
 
@@ -60,9 +61,15 @@ export default function Search() {
          and show the result  in Right sside of Listing results: section */
         const fetchListings = async () => {
             setLoading(true);
+            setShowMore(false);
             const searchQuery = urlParams.toString();
             const res = await fetch(`/api/listing/get?${searchQuery}`);//use api from backend i.e controller.js
             const data = await res.json();
+            if(data.length > 8){
+                setShowMore(true)//we show this at the end of the page for showing more than 8 listing or 9 listing
+            }else{
+                setShowMore(false)
+            }
             setListings(data);
             setLoading(false);
         }
@@ -124,6 +131,26 @@ export default function Search() {
         urlParams.set('order', sidebardata.order)
         const searchQuery = urlParams.toString()//WE HAVE created a search Ouery of browser
         navigate(`/search?${searchQuery}`)//i.e navigate the user to this searchQuery by /search
+    }
+
+
+    const onShowMoreClick = async () => {
+        //we want number of listings first
+        //so if we have 9 listings in listings so gonna start from 10 to fetch
+        //and also we wanna get the params so based on previous params we wanna fetch the data
+        const numberOfListings = listings.length
+        const startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();//we create the searchQuery based on these searchQuery
+        const res = await fetch(`api/listing/get?${searchQuery}`);
+        const data = await res.json();
+        if (data.length < 9 ) {
+            setShowMore(false);//i.e 9 se less listing hai toh show More button nhi dikhana hai
+        }
+
+        setListings([...listings, ...data]);//so data is also a listing so we newListing i.e data to the previous listings i.e listings
+
     }
     return (
         <div className='flex flex-col md:flex-row'>
@@ -229,13 +256,22 @@ export default function Search() {
 
                     {
                         //import this <ListingItem />  from components on top and render it when there is no loading
-                        !loading && listings && listings.map((listing)=> <ListingItem key={listing._id} listing={listing}/> )
+                        !loading && 
+                        listings && 
+                        listings.map((listing)=> <ListingItem key={listing._id} listing={listing}/> )
                         //Now pass this listing={listing} as a value inside a <ListingItem /> component
                             
                             
 
                         
                     }
+                    {showMore && (
+                        <button onClick={onShowMoreClick}
+                        className='text-green-700 hover:underline p-7 text-center w-full'>
+                            Show More
+                        </button>
+                        
+                    )}
                 </div>
             </div>
         </div>
