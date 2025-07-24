@@ -204,7 +204,7 @@ export default function Home() {
 
       {/*  Render Carousel Here */}
       <CustomCarousel offerListings={offerListings} />
-
+      
       {/* Listing Sections */}
       <div className='max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10'>
         {/* Offers */}
@@ -235,7 +235,8 @@ export default function Home() {
               ))}
             </div>
           </div>
-        )}
+        )
+        }
        
        <div>
         {/* Sale */}
@@ -252,8 +253,9 @@ export default function Home() {
             </div>
           </div>
         )}
-        </div>
-      </div>
+        </div> 
+      </div> 
+
     </div>
   )
 }
