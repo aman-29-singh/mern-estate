@@ -13,4 +13,7 @@ export default defineConfig({
   },
 
   plugins: [react()],
+   resolve: {
+   dedupe: ['swiper'],  // 👈 This avoids duplicate swiper versions
+  },
 })
