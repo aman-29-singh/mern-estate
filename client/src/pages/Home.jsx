@@ -145,7 +145,7 @@ export default function Home() {
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
   
-  useEffect(() => {
+   useEffect(() => {
     const fetchOfferListings = async () => {
       try {
         const res = await fetch('/api/listing/get?offer=true&limit=4');
@@ -155,35 +155,33 @@ export default function Home() {
       } catch (error) {
         console.log(error);
       }
-
-      const fetchRentListings = async () => {
-        try {
-          const res = await fetch('/api/listing/get?type=rent&limit=4');
-          const data = await res.json();
-          setRentListings(data);
-          fetchSaleListings();
-        } catch (error) {
-          console.log(error);
-        }
+    };
+    const fetchRentListings = async () => {
+      try {
+        const res = await fetch('/api/listing/get?type=rent&limit=4');
+        const data = await res.json();
+        setRentListings(data);
+        fetchSaleListings();
+      } catch (error) {
+        console.log(error);
       }
+    };
 
-      const fetchSaleListings = async () => {
-        try {
-          const res = await fetch('/api/listing/get?type=sale&limit=4');
-          const data = await res.json();
-          setSaleListings(data);
-        } catch (error) {
-          console.log(error);
-        }
+    const fetchSaleListings = async () => {
+      try {
+        const res = await fetch('/api/listing/get?type=sale&limit=4');
+        const data = await res.json();
+        setSaleListings(data);
+      } catch (error) {
+        log(error);
       }
-    }
-
+    };
     fetchOfferListings();
   }, []);
 
-
-  console.log(rentListings);
-  console.log(saleListings);
+  console.log("Offer listing is",offerListings);
+  console.log("Rent listing is",rentListings);
+  console.log("Sale listing is",saleListings);
   return (
     <div>
       <div className='flex flex-col gap-6 py-28 px-3 max-w-6xl mx-auto'>
