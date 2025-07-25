@@ -3,9 +3,9 @@ import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';//this is for image
-import SwiperCore from 'Swiper';
+//import SwiperCore from 'Swiper';
 import { useSelector } from 'react-redux';
-import { Navigation } from 'swiper/modules'//because we wanna add navigation between different images
+//import { Navigation } from 'swiper/modules'//because we wanna add navigation between different images
 import 'swiper/css/bundle';
 import Contact from '../components/Contact';//import for contactt button
 import {
@@ -18,7 +18,7 @@ import {
   FaShare,
 } from 'react-icons/fa';
 export default function Listing() {
-    SwiperCore.use([Navigation]);
+  //  SwiperCore.use([Navigation]);
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
