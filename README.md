@@ -42,5 +42,5 @@ A modern real estate web application built using the **MERN stack** with **Tailw
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/mern-estate.git
+   git clone https://github.com/aman-29-singh/mern-estate.git
    cd mern-estate
